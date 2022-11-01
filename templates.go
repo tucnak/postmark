@@ -23,6 +23,38 @@ type Template struct {
 	Active bool
 }
 
+type CreateTemplateBody struct {
+	// Required
+	Name string
+	// Optional
+	Alias string
+	// Required
+	Subject string
+	// either TextBody or HtmlBody is required
+	HtmlBody string
+	// either TextBody or HtmlBody is required
+	TextBody string
+	// Optional
+	TemplateType string
+	// Optional
+	LayoutTemplate string
+}
+
+type EditTemplateBody struct {
+	// Required
+	Name string
+	// Optional
+	Alias string
+	// Required
+	Subject string
+	// either TextBody or HtmlBody is required
+	HtmlBody string
+	// either TextBody or HtmlBody is required
+	TextBody string
+	// Optional
+	LayoutTemplate string
+}
+
 // TemplateInfo is a limited set of template info returned via Index/Editing endpoints
 type TemplateInfo struct {
 	// TemplateId: ID of template
@@ -78,7 +110,7 @@ func (client *Client) GetTemplates(count int64, offset int64) ([]TemplateInfo, i
 ///////////////////////////////////////
 
 // CreateTemplate saves a new template to the server
-func (client *Client) CreateTemplate(template Template) (TemplateInfo, error) {
+func (client *Client) CreateTemplate(template CreateTemplateBody) (TemplateInfo, error) {
 	res := TemplateInfo{}
 	err := client.doRequest(parameters{
 		Method:    "POST",
@@ -93,7 +125,7 @@ func (client *Client) CreateTemplate(template Template) (TemplateInfo, error) {
 ///////////////////////////////////////
 
 // EditTemplate updates details for a specific template with templateID
-func (client *Client) EditTemplate(templateID string, template Template) (TemplateInfo, error) {
+func (client *Client) EditTemplate(templateID string, template EditTemplateBody) (TemplateInfo, error) {
 	res := TemplateInfo{}
 	err := client.doRequest(parameters{
 		Method:    "PUT",
