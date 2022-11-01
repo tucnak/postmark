@@ -78,7 +78,7 @@ func TestCreateTemplate(t *testing.T) {
 		w.Write([]byte(responseJSON))
 	})
 
-	res, err := client.CreateTemplate(Template{
+	res, err := client.CreateTemplate(CreateTemplateBody{
 		Name:     "Onboarding Email",
 		Subject:  "Hello from {{company.name}}!",
 		TextBody: "Hello, {{name}}!",
@@ -105,7 +105,7 @@ func TestEditTemplate(t *testing.T) {
 		w.Write([]byte(responseJSON))
 	})
 
-	res, err := client.EditTemplate("1234", Template{
+	res, err := client.EditTemplate("1234", EditTemplateBody{
 		Name:     "Onboarding Emailzzzzz",
 		Subject:  "Hello from {{company.name}}!",
 		TextBody: "Hello, {{name}}!",

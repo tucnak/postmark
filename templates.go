@@ -21,6 +21,46 @@ type Template struct {
 	AssociatedServerId int64
 	// Active: Indicates that this template may be used for sending email.
 	Active bool
+	// Alias: An optional string you can provide to identify this Template.
+	// Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters,
+	// and the string has to start with a letter.
+	Alias string
+	// LayoutTemplate: The name of the layout template to use for this template.
+	LayoutTemplate string
+	// TemplateType: The type of template returned. Possible options: Standard or Layout.
+	TemplateType string
+}
+
+type CreateTemplateBody struct {
+	// Required
+	Name string
+	// Optional
+	Alias string
+	// Required
+	Subject string
+	// either TextBody or HtmlBody is required
+	HtmlBody string
+	// either TextBody or HtmlBody is required
+	TextBody string
+	// Optional
+	TemplateType string
+	// Optional
+	LayoutTemplate string
+}
+
+type EditTemplateBody struct {
+	// Required
+	Name string
+	// Optional
+	Alias string
+	// Required
+	Subject string
+	// either TextBody or HtmlBody is required
+	HtmlBody string
+	// either TextBody or HtmlBody is required
+	TextBody string
+	// Optional
+	LayoutTemplate string
 }
 
 // TemplateInfo is a limited set of template info returned via Index/Editing endpoints
@@ -37,11 +77,11 @@ type TemplateInfo struct {
 ///////////////////////////////////////
 
 // GetTemplate fetches a specific template via TemplateID
-func (client *Client) GetTemplate(templateID string) (Template, error) {
+func (client *Client) GetTemplate(templateIdOrAlias string) (Template, error) {
 	res := Template{}
 	err := client.doRequest(parameters{
 		Method:    "GET",
-		Path:      fmt.Sprintf("templates/%s", templateID),
+		Path:      fmt.Sprintf("templates/%s", templateIdOrAlias),
 		TokenType: server_token,
 	}, &res)
 	return res, err
@@ -78,7 +118,7 @@ func (client *Client) GetTemplates(count int64, offset int64) ([]TemplateInfo, i
 ///////////////////////////////////////
 
 // CreateTemplate saves a new template to the server
-func (client *Client) CreateTemplate(template Template) (TemplateInfo, error) {
+func (client *Client) CreateTemplate(template CreateTemplateBody) (TemplateInfo, error) {
 	res := TemplateInfo{}
 	err := client.doRequest(parameters{
 		Method:    "POST",
@@ -93,11 +133,11 @@ func (client *Client) CreateTemplate(template Template) (TemplateInfo, error) {
 ///////////////////////////////////////
 
 // EditTemplate updates details for a specific template with templateID
-func (client *Client) EditTemplate(templateID string, template Template) (TemplateInfo, error) {
+func (client *Client) EditTemplate(templateIdOrAlias string, template EditTemplateBody) (TemplateInfo, error) {
 	res := TemplateInfo{}
 	err := client.doRequest(parameters{
 		Method:    "PUT",
-		Path:      fmt.Sprintf("templates/%s", templateID),
+		Path:      fmt.Sprintf("templates/%s", templateIdOrAlias),
 		Payload:   template,
 		TokenType: server_token,
 	}, &res)
@@ -108,11 +148,11 @@ func (client *Client) EditTemplate(templateID string, template Template) (Templa
 ///////////////////////////////////////
 
 // DeleteTemplate removes a template (with templateID) from the server
-func (client *Client) DeleteTemplate(templateID string) error {
+func (client *Client) DeleteTemplate(templateIdOrAlias string) error {
 	res := APIError{}
 	err := client.doRequest(parameters{
 		Method:    "DELETE",
-		Path:      fmt.Sprintf("templates/%s", templateID),
+		Path:      fmt.Sprintf("templates/%s", templateIdOrAlias),
 		TokenType: server_token,
 	}, &res)
 
