@@ -92,6 +92,26 @@ func (client *Client) doRequest(opts parameters, dst interface{}) error {
 		return err
 	}
 	err = json.Unmarshal(body, dst)
+
+	switch {
+
+	case res.StatusCode == 422:
+		var apiError APIError
+
+		err = json.Unmarshal(body, &apiError)
+		if err != nil {
+			return err
+		}
+
+		return apiError
+	case res.StatusCode >= 400:
+		return HttpError{
+			// todo: body?
+			Message:    fmt.Sprintf("HTTP Error: %d", res.StatusCode),
+			StatusCode: res.StatusCode,
+		}
+	}
+
 	return err
 }
 
@@ -101,6 +121,17 @@ type APIError struct {
 	ErrorCode int64
 	// Message contains error details
 	Message string
+}
+
+type HttpError struct {
+	// StatusCode: HTTP status code
+	StatusCode int
+	// Message contains error details
+	Message string
+}
+
+func (res HttpError) Error() string {
+	return res.Message
 }
 
 // Error returns the error message details
