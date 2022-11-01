@@ -21,6 +21,14 @@ type Template struct {
 	AssociatedServerId int64
 	// Active: Indicates that this template may be used for sending email.
 	Active bool
+	// Alias: An optional string you can provide to identify this Template.
+	// Allowed characters are numbers, ASCII letters, and ‘.’, ‘-’, ‘_’ characters,
+	// and the string has to start with a letter.
+	Alias string
+	// LayoutTemplate: The name of the layout template to use for this template.
+	LayoutTemplate string
+	// TemplateType: The type of template returned. Possible options: Standard or Layout.
+	TemplateType string
 }
 
 type CreateTemplateBody struct {
