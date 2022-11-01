@@ -69,11 +69,11 @@ type TemplateInfo struct {
 ///////////////////////////////////////
 
 // GetTemplate fetches a specific template via TemplateID
-func (client *Client) GetTemplate(templateID string) (Template, error) {
+func (client *Client) GetTemplate(templateIdOrAlias string) (Template, error) {
 	res := Template{}
 	err := client.doRequest(parameters{
 		Method:    "GET",
-		Path:      fmt.Sprintf("templates/%s", templateID),
+		Path:      fmt.Sprintf("templates/%s", templateIdOrAlias),
 		TokenType: server_token,
 	}, &res)
 	return res, err
@@ -125,11 +125,11 @@ func (client *Client) CreateTemplate(template CreateTemplateBody) (TemplateInfo,
 ///////////////////////////////////////
 
 // EditTemplate updates details for a specific template with templateID
-func (client *Client) EditTemplate(templateID string, template EditTemplateBody) (TemplateInfo, error) {
+func (client *Client) EditTemplate(templateIdOrAlias string, template EditTemplateBody) (TemplateInfo, error) {
 	res := TemplateInfo{}
 	err := client.doRequest(parameters{
 		Method:    "PUT",
-		Path:      fmt.Sprintf("templates/%s", templateID),
+		Path:      fmt.Sprintf("templates/%s", templateIdOrAlias),
 		Payload:   template,
 		TokenType: server_token,
 	}, &res)
@@ -140,11 +140,11 @@ func (client *Client) EditTemplate(templateID string, template EditTemplateBody)
 ///////////////////////////////////////
 
 // DeleteTemplate removes a template (with templateID) from the server
-func (client *Client) DeleteTemplate(templateID string) error {
+func (client *Client) DeleteTemplate(templateIdOrAlias string) error {
 	res := APIError{}
 	err := client.doRequest(parameters{
 		Method:    "DELETE",
-		Path:      fmt.Sprintf("templates/%s", templateID),
+		Path:      fmt.Sprintf("templates/%s", templateIdOrAlias),
 		TokenType: server_token,
 	}, &res)
 
